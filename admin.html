@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Palabras</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap">
+</head>
+<body>
+    <header>
+        <h1>Administrar Palabras</h1>
+        <nav>
+            <button id="back-button">Regresar</button>
+        </nav>
+    </header>
+    <main>
+        <section id="add-word-section">
+            <h2>Agregar Palabra</h2>
+            <form id="add-word-form">
+                <label for="new-word">Nueva Palabra:</label>
+                <input type="text" id="new-word" name="new-word" required>
+                <label for="list-dropdown">Seleccionar Lista:</label>
+                <select id="list-dropdown" name="list-dropdown" required></select>
+                <button type="submit">Agregar Palabra</button>
+            </form>
+        </section>
+        <section id="create-list-section">
+            <h2>Crear Lista</h2>
+            <form id="create-list-form">
+                <label for="new-list">Nombre de la Lista:</label>
+                <input type="text" id="new-list" name="new-list" required>
+                <button type="submit">Crear Lista</button>
+            </form>
+        </section>
+        <section id="list-section">
+            <h2>Listas Creadas</h2>
+            <ul id="list-container"></ul>
+        </section>
+        <section id="words-section" style="display: none;">
+            <h2>Palabras en la Lista</h2>
+            <ul id="words-container"></ul>
+        </section>
+    </main>
+    <script src="admin.js"></script>
+    <script>
+        document.getElementById('back-button').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

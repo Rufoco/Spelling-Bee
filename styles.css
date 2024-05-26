@@ -1,0 +1,120 @@
+body {
+    font-family: 'Quicksand', Arial, sans-serif; /* Fuente redondeada y moderna */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #FFFFE0; /* Fondo amarillo claro */
+    color: #000000; /* Texto negro */
+}
+
+header {
+    background-color: #FFD700; /* Amarillo dorado */
+    color: #000000; /* Texto negro */
+    padding: 1em;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+header h1 {
+    font-size: 3em; /* Tamaño de fuente más grande */
+    font-weight: 700; /* Negrita */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra de texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#bee-image {
+    margin-left: 10px; /* Espacio entre el texto y la imagen */
+    height: 2em; /* Ajustar el tamaño de la imagen */
+}
+
+nav {
+    display: flex;
+    flex-direction: row; /* Alinear elementos horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    position: absolute;
+    top: 10px;
+    left: 20px; /* Ajustar margen izquierdo para que no quede tan pegado */
+}
+
+.select-list-container {
+    margin-left: 1em; /* Espacio entre el botón y la lista */
+    font-size: 0.9em; /* Hacer un poco más pequeño */
+}
+
+main {
+    display: flex;
+    flex-direction: column; /* Cambiar a columna para alinear verticalmente */
+    align-items: center; /* Centrar horizontalmente */
+    width: 100%;
+    padding: 2em;
+}
+
+section {
+    width: 45%;
+    text-align: center; /* Centrar el contenido del section */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 0.5em 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    background-color: #FF6347; /* Rojo tomate */
+    color: #000000; /* Texto negro */
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 6px #999; /* Sombra para efecto 3D */
+    transition: all 0.2s ease; /* Transición suave */
+    position: relative;
+    font-weight: bold; /* Texto en negrita */
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top left, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+    border-radius: 12px; /* Bordes redondeados */
+    z-index: -1;
+    pointer-events: none;
+}
+
+button:hover {
+    background-color: #FF4500; /* Rojo naranja */
+}
+
+button:active {
+    background-color: #FF4500; /* Rojo naranja */
+    box-shadow: 0 4px #666; /* Sombra más pequeña al hacer clic */
+    transform: translateY(2px); /* Efecto de presionar */
+}
+
+/* Estilo para el elemento que muestra las palabras */
+#current-word {
+    font-size: 7em; /* Tamaño de fuente más grande */
+    font-weight: 700; /* Negrita */
+    font-family: 'Quicksand', Arial, sans-serif; /* Fuente redondeada */
+    margin: 1em 0; /* Margen arriba y abajo */
+    white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+    overflow: hidden; /* Ocultar el texto que no cabe en el contenedor */
+    text-align: center; /* Centrar el texto */
+    width: 100%;
+    max-width: 100%; /* Limitar el ancho máximo al 100% del contenedor */
+}

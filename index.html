@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Bee - Público</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap">
+</head>
+<body>
+    <header>
+        <h1>Spelling Bee <img src="abeja.png" alt="Abeja" id="bee-image"></h1>
+        <nav>
+            <button id="admin-button">Administrar Palabras</button>
+            <div class="select-list-container">
+                <h2>Seleccionar Lista</h2>
+                <select id="list-dropdown"></select>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section id="public-section">
+            <h2>Palabra Actual</h2>
+            <div id="current-word">-</div>
+            <button id="next-word-button">Siguiente Palabra</button>
+            <button id="restart-button" style="display: none;">Volver a Empezar</button>
+            <div id="message" style="display: none;">Todas las palabras han sido mostradas.</div>
+        </section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
