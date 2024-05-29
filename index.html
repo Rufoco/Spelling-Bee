@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spelling Bee - Público</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -13,20 +13,26 @@
         <nav>
             <button id="admin-button">Administrar Palabras</button>
             <div class="select-list-container">
-                <h2>Seleccionar Lista</h2>
-                <select id="list-dropdown"></select>
+                <select id="list-dropdown">
+                    <option value="" disabled selected>Seleccionar Lista</option>
+                </select>
             </div>
         </nav>
     </header>
     <main>
-        <section id="public-section">
-            <h2>Palabra Actual</h2>
-            <div id="current-word">-</div>
+        <section id="current-word-section">
+            <p id="current-word"></p>
+        </section>
+        <section id="penultimate-message" style="display: none;">
+            <p>¡Estás en la penúltima palabra!</p>
+        </section>
+        <section>
             <button id="next-word-button">Siguiente Palabra</button>
-            <button id="restart-button" style="display: none;">Volver a Empezar</button>
-            <div id="message" style="display: none;">Todas las palabras han sido mostradas.</div>
+            <button id="restart-button">Reiniciar</button>
+            <p id="message"></p>
         </section>
     </main>
+    <button class="timer-button" id="timer-button">30</button>
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,95 +1,98 @@
-document.getElementById('admin-button').addEventListener('click', () => {
-    window.location.href = 'admin.html';
-});
+document.addEventListener('DOMContentLoaded', () => {
+    const adminButton = document.getElementById('admin-button');
+    const listDropdown = document.getElementById('list-dropdown');
+    const currentWordElement = document.getElementById('current-word');
+    const nextWordButton = document.getElementById('next-word-button');
+    const restartButton = document.getElementById('restart-button');
+    const messageElement = document.getElementById('message');
+    const timerButton = document.getElementById('timer-button');
+    const penultimateMessageElement = document.getElementById('penultimate-message');
 
-const listDropdown = document.getElementById('list-dropdown');
-const currentWordElement = document.getElementById('current-word');
-const nextWordButton = document.getElementById('next-word-button');
-const restartButton = document.getElementById('restart-button');
-const messageElement = document.getElementById('message');
+    let words = [];
+    let currentIndex = 0;
+    let timerInterval;
 
-let words = [];
-let currentIndex = 0;
-
-// Función para ajustar el tamaño de la fuente
-function adjustFontSize() {
-    let fontSize = 7; // Empezar con el tamaño de fuente grande
-    currentWordElement.style.fontSize = fontSize + 'em';
-
-    // Reducir el tamaño de la fuente hasta que la palabra quepa en una sola línea
-    while (currentWordElement.scrollWidth > currentWordElement.clientWidth && fontSize > 1) {
-        fontSize -= 0.1;
-        currentWordElement.style.fontSize = fontSize + 'em';
-    }
-}
-
-// Función para cargar las palabras de la lista seleccionada
-function loadWords(list) {
-    // Aquí deberías cargar las palabras de la lista seleccionada
-    // Por ejemplo, podrías tener un objeto con listas predefinidas
-    const wordLists = {
-        lista1: ["palabra1", "palabra2", "palabra3"],
-        lista2: ["supercalifragilisticoespialidoso", "anticonstitucionalmente", "electroencefalografista"]
-    };
-
-    words = wordLists[list] || [];
-    currentIndex = 0;
-    if (words.length > 0) {
-        currentWordElement.textContent = words[currentIndex];
-        adjustFontSize();
-        messageElement.style.display = 'none';
-        nextWordButton.style.display = 'inline-block';
-        restartButton.style.display = 'none';
-    } else {
-        currentWordElement.textContent = '-';
-        messageElement.style.display = 'block';
-        nextWordButton.style.display = 'none';
-        restartButton.style.display = 'none';
-    }
-}
-
-// Evento para manejar el cambio de la lista seleccionada
-listDropdown.addEventListener('change', (event) => {
-    const selectedList = event.target.value;
-    loadWords(selectedList);
-});
-
-// Evento para manejar el botón de siguiente palabra
-nextWordButton.addEventListener('click', () => {
-    currentIndex++;
-    if (currentIndex < words.length) {
-        currentWordElement.textContent = words[currentIndex];
-        adjustFontSize();
-    } else {
-        messageElement.style.display = 'block';
-        nextWordButton.style.display = 'none';
-        restartButton.style.display = 'inline-block';
-    }
-});
-
-// Evento para manejar el botón de reiniciar
-restartButton.addEventListener('click', () => {
-    currentIndex = 0;
-    currentWordElement.textContent = words[currentIndex];
-    adjustFontSize();
-    messageElement.style.display = 'none';
-    nextWordButton.style.display = 'inline-block';
-    restartButton.style.display = 'none';
-});
-
-// Inicializar el dropdown con listas de ejemplo
-function initializeDropdown() {
-    const lists = ["lista1", "lista2"];
-    lists.forEach(list => {
-        const option = document.createElement('option');
-        option.value = list;
-        option.textContent = list;
-        listDropdown.appendChild(option);
+    adminButton.addEventListener('click', () => {
+        window.location.href = 'admin.html';
     });
-}
 
-// Llamar a la función de inicialización al cargar la página
-window.onload = () => {
+    listDropdown.addEventListener('change', loadWords);
+    nextWordButton.addEventListener('click', showNextWord);
+    restartButton.addEventListener('click', restartWords);
+    timerButton.addEventListener('click', startTimer);
+
+    function adjustFontSize() {
+        currentWordElement.style.fontSize = '2rem';
+        while (currentWordElement.scrollWidth > currentWordElement.clientWidth) {
+            const currentFontSize = parseFloat(window.getComputedStyle(currentWordElement, null).getPropertyValue('font-size'));
+            currentWordElement.style.fontSize = (currentFontSize - 1) + 'px';
+        }
+    }
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function loadWords() {
+        const selectedList = listDropdown.value;
+        words = JSON.parse(localStorage.getItem('lists'))[selectedList] || [];
+        shuffle(words);
+        currentIndex = 0;
+        showNextWord();
+    }
+
+    function showNextWord() {
+        if (currentIndex < words.length) {
+            currentWordElement.textContent = words[currentIndex];
+            adjustFontSize();
+            currentIndex++;
+            if (currentIndex === words.length - 1) {
+                penultimateMessageElement.style.display = 'block';
+            } else {
+                penultimateMessageElement.style.display = 'none';
+            }
+        } else {
+            messageElement.textContent = '¡Has llegado al final de la lista!';
+            nextWordButton.disabled = true;
+        }
+    }
+
+    function restartWords() {
+        currentIndex = 0;
+        messageElement.textContent = '';
+        nextWordButton.disabled = false;
+        penultimateMessageElement.style.display = 'none';
+        showNextWord();
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        let timeLeft = 30;
+        timerButton.textContent = timeLeft;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerButton.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerButton.textContent = '30';
+            }
+        }, 1000);
+    }
+
+    function initializeDropdown() {
+        const lists = JSON.parse(localStorage.getItem('lists')) || {};
+        listDropdown.innerHTML = '<option value="" disabled selected>Seleccionar Lista</option>';
+        for (const listName in lists) {
+            const option = document.createElement('option');
+            option.value = listName;
+            option.textContent = listName;
+            listDropdown.appendChild(option);
+        }
+    }
+
     initializeDropdown();
     adjustFontSize();
-};
+});
