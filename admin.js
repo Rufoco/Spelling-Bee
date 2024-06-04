@@ -9,31 +9,37 @@ document.addEventListener('DOMContentLoaded', () => {
     let lists = JSON.parse(localStorage.getItem('lists')) || {};
 
     function saveLists() {
-        localStorage.setItem('lists', JSON.stringify(lists));
+        const encodedLists = {};
+        for (let key in lists) {
+            encodedLists[encodeURIComponent(key)] = lists[key];
+        }
+        localStorage.setItem('lists', JSON.stringify(encodedLists));
     }
 
     function renderLists() {
         listContainer.innerHTML = '';
         listDropdown.innerHTML = '<option value="" disabled selected>Seleccionar Lista</option>';
         for (const listName in lists) {
+            const encodedListName = encodeURIComponent(listName);
             const listItem = document.createElement('li');
             listItem.innerHTML = `
                 <span>${listName}</span>
-                <button class="view-words-button" data-list="${listName}">Ver Palabras</button>
-                <button class="delete-list-button" data-list="${listName}">Eliminar Lista</button>
+                <button class="view-words-button" data-list="${encodedListName}">Ver Palabras</button>
+                <button class="delete-list-button" data-list="${encodedListName}">Eliminar Lista</button>
             `;
             listContainer.appendChild(listItem);
 
             const option = document.createElement('option');
-            option.value = listName;
+            option.value = encodedListName;
             option.textContent = listName;
             listDropdown.appendChild(option);
         }
     }
 
-    function renderWords(listName) {
+    function renderWords(encodedListName) {
+        const listName = decodeURIComponent(encodedListName);
         wordsContainer.innerHTML = '';
-        if (lists[listName].length > 0) {
+        if (lists[listName] && lists[listName].length > 0) {
             lists[listName].forEach(word => {
                 const wordItem = document.createElement('li');
                 wordItem.textContent = word;
@@ -48,12 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
     addWordForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const newWord = document.getElementById('new-word').value.trim();
-        const selectedList = listDropdown.value;
-        if (newWord && selectedList) {
-            lists[selectedList].push(newWord);
+        const encodedListName = listDropdown.value;
+        const listName = decodeURIComponent(encodedListName);
+        if (newWord && listName) {
+            lists[listName].push(newWord);
             saveLists();
             document.getElementById('new-word').value = '';
-            renderWords(selectedList);
+            renderWords(encodedListName);
         }
     });
 
@@ -70,14 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     listContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('delete-list-button')) {
-            const listName = e.target.getAttribute('data-list');
+            const encodedListName = e.target.getAttribute('data-list');
+            const listName = decodeURIComponent(encodedListName);
             delete lists[listName];
             saveLists();
             renderLists();
             wordsSection.style.display = 'none';
         } else if (e.target.classList.contains('view-words-button')) {
-            const listName = e.target.getAttribute('data-list');
-            renderWords(listName);
+            const encodedListName = e.target.getAttribute('data-list');
+            renderWords(encodedListName);
         }
     });
 

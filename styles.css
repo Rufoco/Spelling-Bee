@@ -92,20 +92,9 @@ button:active {
     transform: translateY(2px);
 }
 
-button::before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-    pointer-events: none;
-}
 
 #current-word {
-    font-size: 3rem;
+    font-size: 12rem !important; /* Incrementado a 12rem y asegurado con !important */
     font-weight: 700;
     font-family: 'Quicksand', sans-serif;
     margin: 20px 0;

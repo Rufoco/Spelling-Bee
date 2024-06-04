@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Elementos del DOM y variables
     const adminButton = document.getElementById('admin-button');
     const listDropdown = document.getElementById('list-dropdown');
     const currentWordElement = document.getElementById('current-word');
@@ -38,7 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadWords() {
         const selectedList = listDropdown.value;
-        words = JSON.parse(localStorage.getItem('lists'))[selectedList] || [];
+        console.log('Selected List:', selectedList); // Depurar qué lista se selecciona
+        const lists = JSON.parse(localStorage.getItem('lists')) || {};
+        console.log('Lists in localStorage:', lists); // Depurar qué hay en localStorage
+        words = lists[selectedList] || [];
+        console.log('Words loaded:', words); // Depurar las palabras cargadas
         shuffle(words);
         currentIndex = 0;
         showNextWord();
@@ -96,3 +101,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDropdown();
     adjustFontSize();
 });
+
