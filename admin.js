@@ -6,38 +6,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const wordsSection = document.getElementById('words-section');
     const wordsContainer = document.getElementById('words-container');
 
-    let lists = JSON.parse(localStorage.getItem('lists')) || {};
+    let lists = loadLists();
 
     function saveLists() {
-        const encodedLists = {};
-        for (let key in lists) {
-            encodedLists[encodeURIComponent(key)] = lists[key];
-        }
-        localStorage.setItem('lists', JSON.stringify(encodedLists));
+        localStorage.setItem('lists', JSON.stringify(lists));
+    }
+
+    function loadLists() {
+        return JSON.parse(localStorage.getItem('lists')) || {};
     }
 
     function renderLists() {
         listContainer.innerHTML = '';
         listDropdown.innerHTML = '<option value="" disabled selected>Seleccionar Lista</option>';
         for (const listName in lists) {
-            const encodedListName = encodeURIComponent(listName);
             const listItem = document.createElement('li');
             listItem.innerHTML = `
                 <span>${listName}</span>
-                <button class="view-words-button" data-list="${encodedListName}">Ver Palabras</button>
-                <button class="delete-list-button" data-list="${encodedListName}">Eliminar Lista</button>
+                <button class="view-words-button" data-list="${listName}">Ver Palabras</button>
+                <button class="delete-list-button" data-list="${listName}">Eliminar Lista</button>
             `;
             listContainer.appendChild(listItem);
 
             const option = document.createElement('option');
-            option.value = encodedListName;
+            option.value = listName;
             option.textContent = listName;
             listDropdown.appendChild(option);
         }
     }
 
-    function renderWords(encodedListName) {
-        const listName = decodeURIComponent(encodedListName);
+    function renderWords(listName) {
         wordsContainer.innerHTML = '';
         if (lists[listName] && lists[listName].length > 0) {
             lists[listName].forEach(word => {
@@ -54,13 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
     addWordForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const newWord = document.getElementById('new-word').value.trim();
-        const encodedListName = listDropdown.value;
-        const listName = decodeURIComponent(encodedListName);
+        const listName = listDropdown.value;
         if (newWord && listName) {
             lists[listName].push(newWord);
             saveLists();
             document.getElementById('new-word').value = '';
-            renderWords(encodedListName);
+            renderWords(listName);
         }
     });
 
@@ -77,15 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     listContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('delete-list-button')) {
-            const encodedListName = e.target.getAttribute('data-list');
-            const listName = decodeURIComponent(encodedListName);
+            const listName = e.target.getAttribute('data-list');
             delete lists[listName];
             saveLists();
             renderLists();
             wordsSection.style.display = 'none';
         } else if (e.target.classList.contains('view-words-button')) {
-            const encodedListName = e.target.getAttribute('data-list');
-            renderWords(encodedListName);
+            const listName = e.target.getAttribute('data-list');
+            renderWords(listName);
         }
     });
 

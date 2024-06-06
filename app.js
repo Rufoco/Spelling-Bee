@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Elementos del DOM y variables
     const adminButton = document.getElementById('admin-button');
     const listDropdown = document.getElementById('list-dropdown');
     const currentWordElement = document.getElementById('current-word');
@@ -12,21 +11,29 @@ document.addEventListener('DOMContentLoaded', () => {
     let words = [];
     let currentIndex = 0;
     let timerInterval;
+    let isTimerRunning = false;
+    let timeLeft = 30;
 
     adminButton.addEventListener('click', () => {
         window.location.href = 'admin.html';
     });
 
     listDropdown.addEventListener('change', loadWords);
-    nextWordButton.addEventListener('click', showNextWord);
+    nextWordButton.addEventListener('click', () => {
+        showNextWord();
+        resetTimer();
+    });
     restartButton.addEventListener('click', restartWords);
-    timerButton.addEventListener('click', startTimer);
+    timerButton.addEventListener('click', toggleTimer);
 
     function adjustFontSize() {
-        currentWordElement.style.fontSize = '2rem';
-        while (currentWordElement.scrollWidth > currentWordElement.clientWidth) {
+        currentWordElement.style.fontSize = '10rem'; // Tamaño inicial grande para empezar
+        let attempts = 0;
+        const maxAttempts = 100; // Limitar el número de intentos para evitar bucles infinitos
+        while (currentWordElement.scrollWidth > currentWordElement.clientWidth && attempts < maxAttempts) {
             const currentFontSize = parseFloat(window.getComputedStyle(currentWordElement, null).getPropertyValue('font-size'));
             currentWordElement.style.fontSize = (currentFontSize - 1) + 'px';
+            attempts++;
         }
     }
 
@@ -40,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadWords() {
         const selectedList = listDropdown.value;
         console.log('Selected List:', selectedList); // Depurar qué lista se selecciona
-        const lists = JSON.parse(localStorage.getItem('lists')) || {};
+        const lists = loadLists();
         console.log('Lists in localStorage:', lists); // Depurar qué hay en localStorage
         words = lists[selectedList] || [];
         console.log('Words loaded:', words); // Depurar las palabras cargadas
@@ -66,29 +73,59 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function restartWords() {
+        shuffle(words); // Barajar las palabras nuevamente
         currentIndex = 0;
         messageElement.textContent = '';
         nextWordButton.disabled = false;
         penultimateMessageElement.style.display = 'none';
         showNextWord();
+        resetTimer();
     }
 
     function startTimer() {
         clearInterval(timerInterval);
-        let timeLeft = 30;
-        timerButton.textContent = timeLeft;
         timerInterval = setInterval(() => {
-            timeLeft--;
-            timerButton.textContent = timeLeft;
-            if (timeLeft <= 0) {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timerButton.textContent = timeLeft;
+                updateTimerColor();
+            } else {
                 clearInterval(timerInterval);
-                timerButton.textContent = '30';
+                timerButton.textContent = '0';
+                timerButton.style.backgroundColor = 'red'; // Color final
             }
         }, 1000);
     }
 
+    function toggleTimer() {
+        if (isTimerRunning) {
+            clearInterval(timerInterval);
+        } else {
+            startTimer();
+        }
+        isTimerRunning = !isTimerRunning;
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        timeLeft = 30;
+        timerButton.textContent = timeLeft;
+        timerButton.style.backgroundColor = '#4CAF50'; // Color inicial
+        isTimerRunning = false;
+    }
+
+    function updateTimerColor() {
+        if (timeLeft > 20) {
+            timerButton.style.backgroundColor = '#4CAF50'; // Verde
+        } else if (timeLeft > 10) {
+            timerButton.style.backgroundColor = '#FFA500'; // Naranja
+        } else {
+            timerButton.style.backgroundColor = 'red'; // Rojo
+        }
+    }
+
     function initializeDropdown() {
-        const lists = JSON.parse(localStorage.getItem('lists')) || {};
+        const lists = loadLists();
         listDropdown.innerHTML = '<option value="" disabled selected>Seleccionar Lista</option>';
         for (const listName in lists) {
             const option = document.createElement('option');
@@ -98,7 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function loadLists() {
+        return JSON.parse(localStorage.getItem('lists')) || {};
+    }
+
     initializeDropdown();
     adjustFontSize();
 });
-

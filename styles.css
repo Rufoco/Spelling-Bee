@@ -94,7 +94,7 @@ button:active {
 
 
 #current-word {
-    font-size: 12rem !important; /* Incrementado a 12rem y asegurado con !important */
+    font-size: 10rem important!; /* Ajusta el tamaño inicial */
     font-weight: 700;
     font-family: 'Quicksand', sans-serif;
     margin: 20px 0;
@@ -102,25 +102,26 @@ button:active {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+    max-width: 100%; /* Asegura que el contenedor use todo el ancho disponible */
+    display: block; /* Asegura que el contenedor se comporte como un bloque */
 }
 
-.timer-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #ffeb3b;
-    color: #333;
-    font-size: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#timer-button {
+    font-size: 3rem; /* Tamaño más grande */
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Color inicial */
+    color: white;
     cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s;
+    position: fixed; /* Fijo para mantener la posición */
+    top: 10px; /* Ajusta según sea necesario */
+    right: 10px; /* Ajusta según sea necesario */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
 }
+
+
 
 .timer-button:hover {
     background-color: #fdd835;
